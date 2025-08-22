@@ -1,14 +1,36 @@
 .light {
   &.login-wrapper {
-    background-color: white;
-    background-image: url('@/assets/assets-login-bg-white.png');
+    background-color: #f8fafc;
+    background-image: 
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.01) 0px, transparent 1px, transparent 40px, rgba(0, 0, 0, 0.01) 41px),
+      repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.01) 0px, transparent 1px, transparent 40px, rgba(0, 0, 0, 0.01) 41px),
+      radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, transparent 25%, rgba(168, 85, 247, 0.02) 50%, transparent 75%);
   }
 }
 
 .dark {
   &.login-wrapper {
     background-color: var(--td-bg-color-page);
-    background-image: url('@/assets/assets-login-bg-black.png');
+    background-image:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, transparent 1px, transparent 40px, rgba(255, 255, 255, 0.02) 41px),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, transparent 1px, transparent 40px, rgba(255, 255, 255, 0.02) 41px),
+      radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(34, 197, 94, 0.06) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, transparent 25%, rgba(168, 85, 247, 0.03) 50%, transparent 75%);
+    
+    &::before {
+      background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+      filter: blur(50px);
+    }
+
+    &::after {
+      background: linear-gradient(-45deg, rgba(34, 197, 94, 0.08), rgba(59, 130, 246, 0.08));
+      filter: blur(70px);
+    }
   }
 }
 
@@ -16,19 +38,53 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-size: cover;
-  background-position: 100%;
   position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(45deg, rgba(59, 130, 246, 0.06), rgba(168, 85, 247, 0.06));
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(-45deg, rgba(34, 197, 94, 0.04), rgba(59, 130, 246, 0.04));
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+  }
 }
 
 .login-container {
   position: absolute;
-  top: 22%;
+  top: 10%;
   left: 5%;
-  min-height: 500px;
+  right: 5%;
+  bottom: 5%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 10%);
+  overflow: visible;
+  padding: 20px;
 }
 
 .title-container {
+  margin-bottom: 48px;
+  
   .title {
     font: var(--td-font-headline-large);
     color: var(--td-text-color-primary);
@@ -38,30 +94,76 @@
       margin-top: 0;
     }
   }
+}
 
-  .sub-title {
-    margin-top: var(--td-comp-margin-xxl);
+.main-card {
+  min-width: 500px;
+  max-width: 600px;
+  width: 100%;
+  min-height: 400px;
+  max-height: 500px;
+  background: var(--td-bg-color-container);
+  box-shadow: var(--td-shadow-3);
+  border-radius: var(--td-radius-large);
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 10px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
 
-    .tip {
-      display: inline-block;
-      margin-right: var(--td-comp-margin-s);
-      font: var(--td-font-body-medium);
+  &--expanded {
+    min-width: 800px;
+    max-width: 1200px;
+    min-height: 600px;
+    max-height: calc(100vh - 280px);
+    flex: 1;
+    transform: scale(1.02);
+    box-shadow: var(--td-shadow-4);
+    margin: 15px;
+  }
 
-      &:first-child {
-        color: var(--td-text-color-secondary);
-      }
+  :deep(.t-card__body) {
+    padding: 32px 40px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: padding 0.3s ease;
+  }
 
-      &:last-child {
-        color: var(--td-text-color-primary);
-        cursor: pointer;
-      }
+  :deep(.t-tabs) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .t-tabs__nav {
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-shrink: 0;
+      transition: margin-bottom 0.3s ease;
+    }
+
+    .t-tabs__content {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .t-tab-panel {
+      padding-top: 24px;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: padding-top 0.3s ease;
     }
   }
 }
 
 .item-container {
-  width: 400px;
-  margin-top: var(--td-comp-margin-xxxxl);
+  width: 100%;
+  margin-top: 0;
 
   &.login-qrcode {
     .tip-container {
@@ -136,7 +238,24 @@
   }
 
   .btn-container {
-    margin-top: var(--td-comp-margin-xxxxl);
+    margin-top: var(--td-comp-margin-xxl);
+  }
+
+  :deep(.t-form-item) {
+    margin-bottom: 20px;
+    
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  
+  :deep(.t-input) {
+    height: 48px;
+  }
+  
+  :deep(.t-button) {
+    height: 48px;
+    font-size: 16px;
   }
 }
 
@@ -197,5 +316,53 @@
 @media screen and (height <= 700px) {
   .copyright {
     display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login-container {
+    top: 5%;
+    left: 2.5%;
+    right: 2.5%;
+    bottom: 5%;
+    max-height: calc(100vh - 10%);
+    padding: 15px;
+
+    .title-container {
+      margin-bottom: 24px;
+    }
+    
+    .main-card {
+      min-width: unset;
+      max-width: unset;
+      width: 100%;
+      min-height: 350px;
+      max-height: 400px;
+      margin: 5px;
+      
+      &--expanded {
+        min-width: unset;
+        max-width: unset;
+        min-height: 500px;
+        max-height: calc(100vh - 200px);
+        transform: scale(1);
+        flex: 1;
+        margin: 8px;
+      }
+      
+      :deep(.t-card__body) {
+        padding: 24px 20px;
+      }
+
+      :deep(.t-tabs) {
+        .t-tabs__nav {
+          margin-bottom: 20px;
+        }
+
+        .t-tab-panel {
+          padding-top: 16px;
+        }
+      }
+    }
   }
 }
