@@ -65,12 +65,7 @@
 
     <div v-if="logs" class="logs-section">
       <t-card class="logs-card" title="最近调用日志">
-        <t-table
-          :data="logs.list.slice(0, 10)"
-          :columns="logColumns"
-          :loading="loading"
-          :pagination="false"
-        >
+        <t-table :data="logs.list.slice(0, 10)" :columns="logColumns" :loading="loading">
           <template #model_name="{ row }">
             <t-tag theme="primary" variant="outline">{{ row.model_name }}</t-tag>
           </template>
@@ -104,7 +99,6 @@
     <t-empty v-if="!loading && !data && attempted" description="请输入有效的API Key进行查询" />
   </div>
 </template>
-
 <script setup lang="ts">
 import { LineChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
@@ -162,14 +156,18 @@ const logColumns: PrimaryTableCol<TableRowData>[] = [
 
 const chartData = computed(() => data.value?.stats?.trend_data || []);
 
-watch(data, (newData) => {
-  const hasData = !!newData;
-  emit('has-data', hasData);
-  
-  if (hasData) {
-    setTimeout(renderChart, 450);
-  }
-}, { immediate: true });
+watch(
+  data,
+  (newData) => {
+    const hasData = !!newData;
+    emit('has-data', hasData);
+
+    if (hasData) {
+      setTimeout(renderChart, 450);
+    }
+  },
+  { immediate: true },
+);
 
 async function search() {
   if (!form.apiKey.trim()) {
@@ -286,7 +284,7 @@ function renderChart() {
   };
 
   chart.setOption(option);
-  
+
   nextTick(() => {
     chart?.resize();
   });
@@ -318,7 +316,7 @@ function formatDuration(duration: number): string {
 function formatDateTime(dateStr: string): string {
   if (!dateStr) return '-';
   const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return '-';
+  if (Number.isNaN(date.getTime())) return '-';
   return date.toLocaleString('zh-CN', {
     month: '2-digit',
     day: '2-digit',
@@ -331,13 +329,12 @@ onUnmounted(() => {
   chart?.dispose();
 });
 </script>
-
 <style lang="less" scoped>
 .api-key-query-container {
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+
   .api-key-input-section {
     margin-bottom: var(--td-comp-margin-xl);
     flex-shrink: 0;
@@ -425,7 +422,7 @@ onUnmounted(() => {
   .logs-section {
     flex-shrink: 0;
     margin-bottom: var(--td-comp-margin-xl);
-    
+
     .logs-card {
       :deep(.t-table) {
         .t-table__cell {
